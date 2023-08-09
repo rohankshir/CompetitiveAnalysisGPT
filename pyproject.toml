@@ -20,6 +20,7 @@ youtube-transcript-api = "^0.6.1"
 backoff = "^2.2.1"
 colorama = "^0.4.6"
 slack-bolt = "^1.18.0"
+diskcache = "^5.6.1"
 
 
 [build-system]

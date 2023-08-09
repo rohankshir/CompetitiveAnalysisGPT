@@ -786,6 +786,17 @@ files = [
 ]
 
 [[package]]
+name = "diskcache"
+version = "5.6.1"
+description = "Disk Cache -- Disk and file backed persistent cache."
+optional = false
+python-versions = ">=3"
+files = [
+    {file = "diskcache-5.6.1-py3-none-any.whl", hash = "sha256:558c6a2d5d7c721bb00e40711803d6804850c9f76c426ed81ecc627fe9d2ce2d"},
+    {file = "diskcache-5.6.1.tar.gz", hash = "sha256:e4c978532feff5814c4cc00fe1e11e40501985946643d73220d41ee7737c72c3"},
+]
+
+[[package]]
 name = "duckduckgo-search"
 version = "3.8.4"
 description = "Search for words, documents, images, news, maps and text translation using the DuckDuckGo.com search engine."
@@ -3070,4 +3081,4 @@ requests = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "9c8ac95a3c0e2d07d31f65ca2497aaa873b0e7421c033af827f2200b255f71d2"
+content-hash = "d0d577513e268290eced1c1a87302324a3fb50da6750f33f1804bad258ff04d7"

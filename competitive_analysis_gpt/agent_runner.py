@@ -81,6 +81,10 @@ class AgentRunner:
         response = chat_completion_request(
             self.conversation_history, self.functions, model=self.model
         )
+        # Check for InvalidRequestError
+        if "error" in response:
+            print(response["error"])
+            return
         full_message = response["choices"][0]
         if force_complete:
             response = chat_completion_request(

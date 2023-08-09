@@ -173,6 +173,8 @@ async def handle_uml_submission(ack, body, client):
                 thread_ts=response["ts"],
             )
             function, result = runner.chat_completion_with_function_execution()
+            print("Function:", function)
+            print("Result:", result)
             function_copy = function.copy()
             function_copy["arguments"] = json.loads(function_copy["arguments"])
             if runner.complete:
@@ -198,7 +200,7 @@ async def handle_uml_submission(ack, body, client):
             thread_ts=response["ts"],
         )
     await client.chat_update(
-        text="Finished competitive analysis. Uploading CSV",
+        text=f"Finished competitive analysis for: {','.join(companies)}. Uploading CSV",
         channel=private_metadata["channel_id"],
         ts=response["ts"],
     )

@@ -16,7 +16,7 @@ class ScrapeURL(BaseModel):
     url: str = Field(..., description="the url to scrape")
 
     def execute(self):
-        result = browse.scrape_and_convert_to_markdown(self.url, smart_mode=False)
+        result = browse.scrape_and_convert_to_markdown(self.url, smart_mode=True)
         return result
 
 
@@ -44,7 +44,7 @@ class GoogleSearch(BaseModel):
 
     def execute(self):
         keywords = self.company_name + " " + self.keywords
-        result = browse.search_urls_and_preview(keywords, 10)
+        result = browse.search_urls_and_preview(keywords, 3)
         return json.dumps(list(result), indent=2)
 
 
