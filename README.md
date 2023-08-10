@@ -12,9 +12,13 @@ Generate a spreadsheet from a list of company names within minutes with the foll
 - investor leads
 - founded date
 
-Designed to get the job done and is not optimized for cost.
+Craefully designed to get the job done effectively.
 
-Requires a single OpenAI API Key
+Requires a single OpenAI API Key to get started.
+
+[Demo Video (Loom)](https://www.loom.com/share/e756f98c6148470c9f3aa732a103bdc7?sid=bf436bf9-cce0-408a-9c47-7fcf3cc9ed42)
+
+This could be a useful starting point for start ups building new products, vendor analysis, and VC scouting / due diligence.
 
 ## Features
 
@@ -26,10 +30,10 @@ Requires a single OpenAI API Key
 - Uses multiple agent runs to stay within the 32K Context Window
 - Easy to understand code and prompts - No Langchain.
 
-## Timing and Cost per Company
+## Average Timing and Cost **per** Company
 
-Timing: ~1 minute
-Cost: 0.5 to 1 USD
+Time: ~1 minute
+Cost: 1 USD
 
 ## Installation
 
@@ -56,9 +60,7 @@ Make sure to replace the values with your actual information.
 After installing the dependencies and setting up the .env file, you can run the project using:
 
 ```
-
 poetry run python main.py
-
 ```
 
 Enter one company name or URL per line, and hit enter again when you're done.
@@ -68,8 +70,8 @@ Output: `result.csv` in your current working directory
 
 ## Slack Usage
 
-1. Create a slack app in your workspace using `slack_manifest.yaml`
-2. Source all relevant env vars (reference env.template) into your environment
+1. Create a slack app in your workspace using [`slack_manifest.yaml`](./slack_manifest.yaml)
+2. Source all relevant env vars (reference [.env.template](./.env.template)) into your environment
 3. `poetry run python slack.py`
 4. In Slack, add Competitive Analysis GPT to a Slack channel and mention it to begin.
 
