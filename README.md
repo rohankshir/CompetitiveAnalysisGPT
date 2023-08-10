@@ -16,7 +16,9 @@ Craefully designed to get the job done effectively.
 
 Requires a single OpenAI API Key to get started.
 
-[Demo Video (Loom)](https://www.loom.com/share/e756f98c6148470c9f3aa732a103bdc7?sid=bf436bf9-cce0-408a-9c47-7fcf3cc9ed42)
+## Demo Video
+https://github.com/rohankshir/CompetitiveAnalysisGPT/assets/2716590/e458fa2d-d213-43da-80fc-86e28a4e3c5f
+
 
 This could be a useful starting point for start ups building new products, vendor analysis, and VC scouting / due diligence.
 
