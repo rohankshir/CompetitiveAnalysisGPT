@@ -17,10 +17,12 @@ def cache_disk(func):
     def wrapper(*args, **kwargs):
         key = cache_key(*args, **kwargs)
         result = cache.get(key)
-        if result is None:
+        # if result is none or error
+        if result is None or isinstance(result, Exception):
             result = func(*args, **kwargs)
             cache.set(key, result)
         else:
+            print(type(result))
             print("Cache hit")
         return result
 
@@ -52,9 +54,4 @@ def chat_completion_request(
         json_data.update({"functions": functions})
     if function_call is not None:
         json_data.update({"function_call": {"name": function_call}})
-    try:
-        return openai.ChatCompletion.create(**json_data)
-    except Exception as e:
-        print("Unable to generate ChatCompletion response")
-        print(f"Exception: {e}")
-        return e
+    return openai.ChatCompletion.create(**json_data)

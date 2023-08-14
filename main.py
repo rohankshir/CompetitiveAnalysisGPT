@@ -1,11 +1,13 @@
 from competitive_analysis_gpt.functions import (
     ScrapeURL,
+    ScrapeURLs,
     GetCrunchbaseFinancials,
     GoogleSearch,
+    GoogleSearches,
     GetYoutubeTranscript,
     ResearchComplete,
 )
-from competitive_analysis_gpt.prompts import SYSTEM_PROMPT_V1, SYSTEM_PROMPT_V2
+from competitive_analysis_gpt.prompts import SYSTEM_PROMPT_V1, SYSTEM_PROMPT_V2, SYSTEM_PROMPT_V3
 from competitive_analysis_gpt.agent_runner import AgentRunner
 from competitive_analysis_gpt.llm_util import GPT4, GPT35
 from pydantic import BaseModel, Field
@@ -13,7 +15,6 @@ from typing import List, Optional, Dict
 import json
 import pandas as pd
 
-print(SYSTEM_PROMPT_V2)
 
 MAX_NUM_STEPS = 20
 
@@ -28,7 +29,7 @@ def run(query, model):
         ],
         model=model,
     )
-    c.add_message("system", SYSTEM_PROMPT_V2)
+    c.add_message("system", SYSTEM_PROMPT_V3)
     c.add_message("user", query)
     complete = False
     num_steps = 0

@@ -60,8 +60,9 @@ class AgentRunner:
             # if role == "function":
             #     continue
             content = message.get("content") or message.get("function_call", "")
-            if len(content) > 200:
-                content = content[:200] + "..."
+            content_display_len = 400
+            if len(content) > content_display_len:
+                content = content[:content_display_len] + "..."
             if role == "function":
                 content = f"Function {message['name']}:\n{content}"
             else:
@@ -82,7 +83,7 @@ class AgentRunner:
             self.conversation_history, self.functions, model=self.model
         )
         # Check for InvalidRequestError
-        if "error" in response:
+        if isinstance(response, dict) and "error" in response:
             print(response["error"])
             return
         full_message = response["choices"][0]

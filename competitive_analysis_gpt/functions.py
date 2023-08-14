@@ -20,6 +20,22 @@ class ScrapeURL(BaseModel):
         return result
 
 
+class ScrapeURLs(BaseModel):
+    """
+    Use this function to get the contents of multiple URls in markdown format with all URLs preserved
+    """
+
+    urls: List[str] = Field(..., description="the urls to scrape")
+
+    def execute(self):
+        result_string = ""
+        for url in self.urls:
+            result_string += url + "\n\n"
+            result = browse.scrape_and_convert_to_markdown(url, smart_mode=True)
+            result_string += result + "\n\n"
+        return result_string
+
+
 class GetCrunchbaseFinancials(BaseModel):
     """
     Use this function to get the financials of a company from crunchbase
@@ -44,8 +60,22 @@ class GoogleSearch(BaseModel):
 
     def execute(self):
         keywords = self.company_name + " " + self.keywords
-        result = browse.search_urls_and_preview(keywords, 3)
+        result = browse.search_urls_and_preview(keywords, 5)
         return json.dumps(list(result), indent=2)
+
+
+class GoogleSearches(BaseModel):
+    "Use this function to parallelize multiple searches at once to get all the information you need quickly"
+    searches: List[GoogleSearch] = Field(..., description="a list of google searches to execute")
+
+    def execute(self):
+        all_search_results = []
+        for search in self.searches:
+            keywords = search.company_name + " " + search.keywords
+            results = list(browse.search_urls_and_preview(keywords, 4))
+            response = {"keywords_searched": keywords, "results": results}
+            all_search_results.append(response)
+        return json.dumps(all_search_results, indent=2)
 
 
 class GetYoutubeTranscript(BaseModel):
@@ -74,6 +104,9 @@ class CompanyProfile(BaseModel):
     )
     features: List[str] = Field(..., description="a list of features for the company")
     integrations: List[str] = Field(..., description="a list of integrations for the company")
+    pricing_details: List[str] = Field(
+        ..., description="a list of pricing packages for the product"
+    )
     investor_vcs: List[str] = Field(..., description="a list of investors by VC name")
     investor_leads: List[str] = Field(..., description="a list of investors by lead investor name")
     relevant_urls: List[str] = Field(..., description="a list of relevant urls for your research")

@@ -7,6 +7,7 @@ from youtube_transcript_api.formatters import TextFormatter
 
 from urllib.parse import urlparse
 from competitive_analysis_gpt.llm_util import chat_completion_request, GPT35
+from bs4 import NavigableString
 
 
 def get_domain(url):
@@ -39,13 +40,18 @@ def get_description_from_iframe_url(iframe_url):
 
 def clean_markdown(content):
     system_prompt = """
-    # MarkdownCleanerGPT
+    # HTMLMarkdownGPT
+    
+    # Role 
+    You carefully provide accurate, factual, thoughtful, nuanced responses, and are brilliant at reasoning.
     
     ## Instructions
-    1. Take markdown content and reduce it to the most important content
+    1. Take rough html markdown content and reduce it to the most important content while adding markdown structure where possible
     2. Remove irrelevant links that don't seem to be relevant to the main content
     3. Remove all irrelevant content such as ads
-    4. Return the cleaned markdown content
+    4. Remove all repetitive content
+    5. Add header sections and lists and bolding whenever appropriate to make it easier to read
+    6. Return the cleaned markdown content
     """
     params = {
         "messages": [
@@ -59,6 +65,20 @@ def clean_markdown(content):
     return full_message
 
 
+def collapse_single_child_divs(tag):
+    # List to hold div tags to be replaced
+    to_replace = []
+
+    # Collect div tags with a single div child
+    for div_tag in tag.find_all("div", recursive=True):
+        if div_tag.div and len(list(div_tag.children)) == 1:
+            to_replace.append(div_tag)
+
+    # Replace collected div tags with their single div child
+    for div_tag in to_replace:
+        div_tag.replace_with(div_tag.div)
+
+
 def scrape_and_convert_to_markdown(url, smart_mode=False):
     # make url whole
     if not url.startswith("http"):
@@ -66,9 +86,16 @@ def scrape_and_convert_to_markdown(url, smart_mode=False):
     response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
     if response.status_code != 200:
         print(f"Failed to fetch URL {url}")
-        return
+        return f"Failed to fetch URL {url}"
 
     soup = BeautifulSoup(response.text, "html.parser")
+
+    for tag in soup.find_all(["style", "script"]):
+        tag.decompose()
+
+    # Remove all image tags or links
+    for img_tag in soup.find_all("img"):
+        img_tag.decompose()
 
     iframes = soup.find_all("iframe")
 
@@ -87,9 +114,10 @@ def scrape_and_convert_to_markdown(url, smart_mode=False):
     # Using html2text to convert HTML to Markdown
     converter = html2text.HTML2Text()
     converter.ignore_links = False
-    markdown = converter.handle(str(soup))
+    markdown = converter.handle(str(soup.body))
 
     if smart_mode:
+        print("Cleaning markdown")
         return clean_markdown(markdown)
     return markdown
 
@@ -121,8 +149,8 @@ def get_youtube_transcript(url):
 
 def search_urls_and_preview(keywords, limit=None):
     num_results = 0
-    with DDGS() as ddgs:
-        for r in ddgs.text(keywords, region="wt-wt", safesearch="Off", timelimit="y"):
+    with DDGS(timeout=20) as ddgs:
+        for r in ddgs.text(keywords):
             yield r
             num_results += 1
             if limit and num_results >= limit:
